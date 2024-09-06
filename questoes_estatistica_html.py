@@ -2,7 +2,21 @@ import random
 import math
 
 def gerar_valores():
-    return [random.randint(1, 100) for _ in range(random.randint(5, 10))]
+    n = random.randint(5, 10)  # Define o número de elementos
+    media_desejada = random.randint(1, 100)  # Define uma média desejada
+    soma_desejada = media_desejada * n  # Calcula a soma necessária para ter a média desejada
+    
+    valores = [random.randint(1, 100) for _ in range(n - 1)]  # Gera n-1 valores aleatórios
+    ultimo_valor = soma_desejada - sum(valores)  # Calcula o último valor para garantir a média desejada
+    
+    # Se o último valor gerado não for válido (por exemplo, for negativo), gere novamente os valores
+    while ultimo_valor < 1 or ultimo_valor > 100:
+        valores = [random.randint(1, 100) for _ in range(n - 1)]
+        ultimo_valor = soma_desejada - sum(valores)
+    
+    valores.append(ultimo_valor)  # Adiciona o último valor à lista
+    
+    return valores
 
 def calcular_media(valores):
     return sum(valores) / len(valores)
