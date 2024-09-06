@@ -6,205 +6,71 @@
     <title>Questões de Estatística</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            margin: 20px;
         }
         h1 {
             text-align: center;
             color: #333;
-        }
-        .credit {
-            text-align: center;
-            color: #777;
-            font-size: 14px;
-            margin-top: -10px;
-            margin-bottom: 20px;
-        }
-        .button-container {
-            text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
+            font-size: 2rem;
         }
         .question-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         .question {
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #444;
         }
-        .answer, .resolution {
-            background-color: #e7f3fe;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #b3d4fc;
-            display: none; /* Oculto por padrão */
-            margin-top: 10px;
+        .answer {
+            background-color: #e0f7fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #00acc1;
+            font-size: 1rem;
+            color: #007c91;
         }
-        button {
-            padding: 10px 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        .show-button {
-            background-color: #28a745;
-            color: white;
-        }
-        .hide-button {
-            background-color: #dc3545;
-            color: white;
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #777;
+            font-size: 0.9rem;
         }
     </style>
-    <script>
-        function gerarValores() {
-            const valores = Array.from({length: Math.floor(Math.random() * 6) + 5}, () => Math.floor(Math.random() * 100) + 1);
-            const media = calcularMedia(valores).toFixed(2);
-            const mediana = calcularMediana(valores).toFixed(2);
-            const variancia = calcularVariancia(valores).toFixed(2);
-            const desvioPadrao = calcularDesvioPadrao(valores).toFixed(2);
-            const desvioMedio = calcularDesvioMedio(valores).toFixed(2);
-
-            document.getElementById('question1').innerHTML = `Calcule a média aritmética dos seguintes valores: ${valores}`;
-            document.getElementById('gabarito1').innerHTML = `Média = ${media}`;
-            document.getElementById('resolucao1').innerHTML = `
-                <p><strong>Passo 1:</strong> Some todos os valores: ${valores.join(' + ')} = ${valores.reduce((a, b) => a + b)}</p>
-                <p><strong>Passo 2:</strong> Divida a soma pelo número de valores (${valores.length}):</p>
-                <p>${valores.reduce((a, b) => a + b)} ÷ ${valores.length} = ${media}</p>
-                <p>Portanto, a média aritmética é <strong>${media}</strong>.</p>
-            `;
-
-            document.getElementById('question2').innerHTML = `Calcule a mediana dos seguintes valores: ${valores}`;
-            document.getElementById('gabarito2').innerHTML = `Mediana = ${mediana}`;
-            document.getElementById('resolucao2').innerHTML = `
-                <p><strong>Passo 1:</strong> Organize os valores em ordem crescente: ${valores.sort((a, b) => a - b).join(', ')}</p>
-                <p><strong>Passo 2:</strong> Identifique o valor central:</p>
-                <p>${valores.length % 2 === 0 ? `Como há um número par de valores, a mediana será a média dos dois valores centrais (${valores[valores.length / 2 - 1]} e ${valores[valores.length / 2]}).` : `Como há um número ímpar de valores, a mediana é o valor central (${valores[Math.floor(valores.length / 2)]}).`}</p>
-                <p>Portanto, a mediana é <strong>${mediana}</strong>.</p>
-            `;
-
-            document.getElementById('question3').innerHTML = `Calcule a variância dos seguintes valores: ${valores}`;
-            document.getElementById('gabarito3').innerHTML = `Variância = ${variancia}`;
-            document.getElementById('resolucao3').innerHTML = `
-                <p><strong>Passo 1:</strong> Subtraia a média de cada valor e eleve ao quadrado:</p>
-                <p>${valores.map(x => `(${x} - ${media})² = ${Math.pow(x - media, 2).toFixed(2)}`).join('<br>')}</p>
-                <p><strong>Passo 2:</strong> Some todos os valores obtidos:</p>
-                <p>${valores.map(x => Math.pow(x - media, 2).toFixed(2)).join(' + ')} = ${valores.map(x => Math.pow(x - media, 2)).reduce((a, b) => a + b).toFixed(2)}</p>
-                <p><strong>Passo 3:</strong> Divida pela quantidade de valores (${valores.length}):</p>
-                <p>${valores.map(x => Math.pow(x - media, 2)).reduce((a, b) => a + b).toFixed(2)} ÷ ${valores.length} = ${variancia}</p>
-                <p>Portanto, a variância é <strong>${variancia}</strong>.</p>
-            `;
-
-            document.getElementById('question4').innerHTML = `Calcule o desvio padrão dos seguintes valores: ${valores}`;
-            document.getElementById('gabarito4').innerHTML = `Desvio Padrão = ${desvioPadrao}`;
-            document.getElementById('resolucao4').innerHTML = `
-                <p><strong>Passo 1:</strong> Calcule a variância dos valores:</p>
-                <p>Utilizamos o mesmo processo da questão anterior para calcular a variância (${variancia}).</p>
-                <p><strong>Passo 2:</strong> Tire a raiz quadrada da variância:</p>
-                <p>√${variancia} = ${desvioPadrao}</p>
-                <p>Portanto, o desvio padrão é <strong>${desvioPadrao}</strong>.</p>
-            `;
-
-            document.getElementById('question5').innerHTML = `Calcule o desvio médio dos seguintes valores: ${valores}`;
-            document.getElementById('gabarito5').innerHTML = `Desvio Médio = ${desvioMedio}`;
-            document.getElementById('resolucao5').innerHTML = `
-                <p><strong>Passo 1:</strong> Subtraia a média de cada valor e tire o valor absoluto:</p>
-                <p>${valores.map(x => `|${x} - ${media}| = ${Math.abs(x - media).toFixed(2)}`).join('<br>')}</p>
-                <p><strong>Passo 2:</strong> Some todos os valores obtidos:</p>
-                <p>${valores.map(x => Math.abs(x - media).toFixed(2)).join(' + ')} = ${valores.map(x => Math.abs(x - media)).reduce((a, b) => a + b).toFixed(2)}</p>
-                <p><strong>Passo 3:</strong> Divida pela quantidade de valores (${valores.length}):</p>
-                <p>${valores.map(x => Math.abs(x - media)).reduce((a, b) => a + b).toFixed(2)} ÷ ${valores.length} = ${desvioMedio}</p>
-                <p>Portanto, o desvio médio é <strong>${desvioMedio}</strong>.</p>
-            `;
-        }
-
-        function calcularMedia(valores) {
-            return valores.reduce((a, b) => a + b) / valores.length;
-        }
-
-        function calcularMediana(valores) {
-            valores.sort((a, b) => a - b);
-            const meio = Math.floor(valores.length / 2);
-            if (valores.length % 2 === 0) {
-                return (valores[meio - 1] + valores[meio]) / 2;
-            } else {
-                return valores[meio];
-            }
-        }
-
-        function calcularVariancia(valores) {
-            const media = calcularMedia(valores);
-            return valores.map(x => (x - media) ** 2).reduce((a, b) => a + b) / valores.length;
-        }
-
-        function calcularDesvioPadrao(valores) {
-            return Math.sqrt(calcularVariancia(valores));
-        }
-
-        function calcularDesvioMedio(valores) {
-            const media = calcularMedia(valores);
-            return valores.map(x => Math.abs(x - media)).reduce((a, b) => a + b) / valores.length;
-        }
-
-        function toggleAnswer(id) {
-            const element = document.getElementById(id);
-            element.style.display = element.style.display === 'none' ? 'block' : 'none';
-        }
-    </script>
 </head>
 <body>
-    <h1>Questões de Estatística</h1>
-    <p class="credit">Feito por: Rafael Hechtman</p>
+    <div class="container">
+        <h1>Questões de Estatística</h1>
 
-    <div class="button-container">
-        <button class="show-button" onclick="gerarValores()">Gerar Questões</button>
+        <!-- Questões serão inseridas aqui -->
+        <!-- Exemplo de uma questão -->
+        <div class="question-container">
+            <div class="question">1. Calcule a média aritmética dos seguintes valores: [valores]</div>
+            <div class="answer">Média = [resposta]</div>
+        </div>
+
+        <!-- Adicione mais questões abaixo conforme necessário -->
+
+        <footer>
+            &copy; 2024 Sistema de Estatística. Todos os direitos reservados.
+        </footer>
     </div>
-
-    <div class="question-container">
-        <div class="question" id="question1">Clique em "Gerar Questões" para começar.</div>
-        <button class="show-button" onclick="toggleAnswer('gabarito1')">Ver Gabarito</button>
-        <button class="show-button" onclick="toggleAnswer('resolucao1')">Ver Resolução</button>
-        <div class="answer" id="gabarito1"></div>
-        <div class="resolution" id="resolucao1"></div>
-    </div>
-
-    <div class="question-container">
-        <div class="question" id="question2"></div>
-        <button class="show-button" onclick="toggleAnswer('gabarito2')">Ver Gabarito</button>
-        <button class="show-button" onclick="toggleAnswer('resolucao2')">Ver Resolução</button>
-        <div class="answer" id="gabarito2"></div>
-        <div class="resolution" id="resolucao2"></div>
-    </div>
-
-    <div class="question-container">
-        <div class="question" id="question3"></div>
-        <button class="show-button" onclick="toggleAnswer('gabarito3')">Ver Gabarito</button>
-        <button class="show-button" onclick="toggleAnswer('resolucao3')">Ver Resolução</button>
-        <div class="answer" id="gabarito3"></div>
-        <div class="resolution" id="resolucao3"></div>
-    </div>
-
-    <div class="question-container">
-        <div class="question" id="question4"></div>
-        <button class="show-button" onclick="toggleAnswer('gabarito4')">Ver Gabarito</button>
-        <button class="show-button" onclick="toggleAnswer('resolucao4')">Ver Resolução</button>
-        <div class="answer" id="gabarito4"></div>
-        <div class="resolution" id="resolucao4"></div>
-    </div>
-
-    <div class="question-container">
-        <div class="question" id="question5"></div>
-        <button class="show-button" onclick="toggleAnswer('gabarito5')">Ver Gabarito</button>
-        <button class="show-button" onclick="toggleAnswer('resolucao5')">Ver Resolução</button>
-        <div class="answer" id="gabarito5"></div>
-        <div class="resolution" id="resolucao5"></div>
-    </div>
-
 </body>
 </html>
